@@ -1,0 +1,1 @@
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.game-card,.provider-card,.promo-card').forEach((el,i)=>{el.style.animationDelay=(i*35)+'ms';el.classList.add('fade-in')})});

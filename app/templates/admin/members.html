@@ -1,0 +1,1 @@
+{% extends 'layouts/admin.html' %}{% block heading %}Member Manager{% endblock %}{% block content %}<div class="panel"><table><tr><th>Username</th><th>Email</th><th>Role</th><th>Saldo</th></tr>{% for m in members %}<tr><td>{{m.username}}</td><td>{{m.email}}</td><td>{{m.role}}</td><td>{{m.balance}}</td></tr>{% endfor %}</table></div>{% endblock %}

@@ -1,35 +1,8 @@
-# Python
 __pycache__/
-*.py[cod]
-*.pyo
-.pytest_cache/
-
-# Virtual env
-venv/
-.venv/
-env/
-
-# Secrets / local config
+*.pyc
 .env
-.env.*
-!.env.example
-
-# Databases / runtime files
+instance/
 *.db
-instance/*.db
-*.sqlite
-*.sqlite3
-
-# Uploads and generated files
-app/static/img/uploads/
-exports/
-backups/
-
-# OS / IDE
+.venv/
+venv/
 .DS_Store
-Thumbs.db
-.vscode/
-.idea/
-
-# Git internals should never be zipped for deployment
-.git/
