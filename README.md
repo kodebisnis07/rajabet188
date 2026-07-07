@@ -26,3 +26,8 @@ python run.py
 ## Render
 Build: `pip install -r requirements.txt`
 Start: `gunicorn run:app`
+
+
+## Update Game Slot
+
+Bagian game sudah diisi dengan 39 game dari daftar referensi pengguna, dibagi menjadi provider Pragmatic Play dan PG Soft. Thumbnail dibuat sebagai aset SVG original di `app/static/img/games/` agar tidak bergantung pada aset website lain.

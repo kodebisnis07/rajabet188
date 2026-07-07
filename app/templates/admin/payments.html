@@ -1,7 +1,1 @@
-{% extends "admin/base.html" %}
-{% block content %}
-<h1>Pembayaran</h1>
-<table class="admin-table"><thead><tr><th>ID</th><th>Invoice</th><th>Provider</th><th>Reference</th><th>Amount</th><th>Status</th></tr></thead><tbody>
-{% for payment in payments %}<tr><td>{{ payment.id }}</td><td>{{ payment.order.invoice if payment.order else '-' }}</td><td>{{ payment.provider or '-' }}</td><td>{{ payment.reference or '-' }}</td><td>Rp {{ "{:,}".format(payment.amount).replace(",", ".") }}</td><td>{{ payment.status }}</td></tr>{% else %}<tr><td colspan="6">Belum ada pembayaran.</td></tr>{% endfor %}
-</tbody></table>
-{% endblock %}
+{% extends 'layouts/admin.html' %}{% block heading %}Payment Gateway{% endblock %}{% block content %}<form class="panel form-row" method="post"><input name="name" placeholder="Nama gateway" required><input name="code" placeholder="Kode unik" required><select name="mode"><option>manual</option><option>api</option><option>sandbox</option></select><textarea name="config_json" placeholder='{"api_key":""}'></textarea><label><input name="is_active" type="checkbox"> Aktif</label><button>Tambah</button></form><div class="panel"><table><tr><th>Nama</th><th>Kode</th><th>Mode</th><th>Status</th></tr>{% for g in gateways %}<tr><td>{{g.name}}</td><td>{{g.code}}</td><td>{{g.mode}}</td><td>{{'Aktif' if g.is_active else 'Nonaktif'}}</td></tr>{% endfor %}</table></div>{% endblock %}

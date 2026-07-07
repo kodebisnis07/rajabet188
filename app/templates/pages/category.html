@@ -1,1 +1,23 @@
-{% extends 'layouts/base.html' %}{% block title %}{{category}} - Rajabet188{% endblock %}{% block content %}<section class="container page-head"><h1>{{category}}</h1><p>Pilih game favorit Anda di kategori {{category}}.</p></section><section class="container section"><div class="game-grid">{% for g in games %}<div class="game-card"><div class="game-thumb">🎮</div><div class="game-info"><b>{{g.name}}</b><span>{{g.provider_name}}</span><em>{{g.status|title}}</em></div></div>{% else %}<p>Belum ada game.</p>{% endfor %}</div></section>{% endblock %}
+{% extends 'layouts/base.html' %}{% block title %}{{category}} - Rajabet188{% endblock %}
+{% block content %}
+<section class="container page-head">
+  <h1>{{category}}</h1>
+  <p>Pilih game favorit Anda di kategori {{category}}.</p>
+</section>
+<section class="container section">
+  <div class="game-grid">
+    {% for g in games %}
+      <div class="game-card">
+        {% if g.is_hot %}<span class="game-badge">HOT</span>{% endif %}
+        {% if g.is_new %}<span class="game-badge new">NEW</span>{% endif %}
+        <div class="game-thumb">
+          {% if g.thumbnail %}<img src="{{ g.thumbnail }}" alt="{{ g.name }}">{% else %}🎮{% endif %}
+        </div>
+        <div class="game-info"><b>{{g.name}}</b><span>{{g.provider_name}}</span><em>{{g.status|title}}</em></div>
+      </div>
+    {% else %}
+      <p>Belum ada game.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
