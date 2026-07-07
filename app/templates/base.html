@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+  {% set seo_settings = settings if settings is defined else global_settings if global_settings is defined else {} %}
+  {% set brand_name = seo_settings.get('site_name') or 'Rajabet188' %}
+  {% set default_title = seo_settings.get('meta_title') or brand_name ~ ' | Premium Game Lobby' %}
+  {% set default_description = seo_settings.get('meta_description') or 'Rajabet188 menghadirkan lobby game premium, promo, member area, dan layanan digital dalam tampilan modern.' %}
+  <title>{% block title %}{{ default_title }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{{ default_description }}{% endblock %}">
+  <meta name="theme-color" content="#08090d">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ default_title }}">
+  <meta property="og:description" content="{{ default_description }}">
+  <link rel="canonical" href="{{ canonical_url if canonical_url is defined else request.url }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="manifest" href="{{ url_for('manifest') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/pwa/icon-192.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=rajabet188-v2">
+</head>
+<body class="rb-body">
+  <div class="rb-bg-orb rb-bg-orb-1"></div>
+  <div class="rb-bg-orb rb-bg-orb-2"></div>
+
+  <header class="rb-topbar">
+    <a class="rb-brand" href="{{ url_for('home.index') }}" aria-label="Beranda Rajabet188">
+      <span class="rb-brand-mark">R</span>
+      <span><b>Rajabet188</b><small>Premium Game Lobby</small></span>
+    </a>
+    <nav class="rb-nav" id="rb-main-nav">
+      <a href="{{ url_for('home.index') }}#home">Home</a>
+      <a href="{{ url_for('home.index') }}#provider">Provider</a>
+      <a href="{{ url_for('home.index') }}#games">Games</a>
+      <a href="{{ url_for('home.index') }}#promo">Promosi</a>
+      <a href="{{ url_for('home.index') }}#faq">FAQ</a>
+    </nav>
+    <div class="rb-actions">
+      {% if session.get('user_id') %}
+        <a class="rb-btn rb-btn-ghost" href="{{ url_for('auth.dashboard') }}">Member</a>
+        <a class="rb-btn rb-btn-gold" href="{{ url_for('auth.logout') }}">Logout</a>
+      {% else %}
+        <a class="rb-btn rb-btn-ghost" href="{{ url_for('auth.login') }}">Masuk</a>
+        <a class="rb-btn rb-btn-gold" href="{{ url_for('auth.register') }}">Daftar</a>
+      {% endif %}
+    </div>
+    <button class="rb-menu-btn" type="button" aria-label="Buka menu" aria-expanded="false">☰</button>
+  </header>
+
+  <main>{% block content %}{% endblock %}</main>
+
+  <a class="rb-floating-cs" href="https://wa.me/{{ (settings.get('whatsapp') if settings is defined else '')|replace('+','')|replace(' ','') if settings is defined and settings.get('whatsapp') else '6281234567890' }}" target="_blank" rel="noopener">💬 CS 24 Jam</a>
+
+  <footer class="rb-footer">
+    <div>
+      <b>Rajabet188</b>
+      <p>Website hiburan game bergaya premium dengan kontrol admin modern.</p>
+    </div>
+    <div class="rb-footer-links">
+      <a href="{{ url_for('home.index') }}#promo">Promo</a>
+      <a href="{{ url_for('auth.login') }}">Login</a>
+      <a href="{{ url_for('admin.login') }}">Admin</a>
+    </div>
+  </footer>
+
+  <nav class="rb-bottom-nav" aria-label="Mobile navigation">
+    <a href="{{ url_for('home.index') }}#home">🏠<span>Home</span></a>
+    <a href="{{ url_for('home.index') }}#provider">🎮<span>Game</span></a>
+    <a href="{{ url_for('home.index') }}#promo">🎁<span>Promo</span></a>
+    <a href="{{ url_for('auth.login') }}">👤<span>Akun</span></a>
+  </nav>
+
+<script>
+(function(){
+  const btn = document.querySelector('.rb-menu-btn');
+  const nav = document.querySelector('.rb-nav');
+  if(btn && nav){
+    btn.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.textContent = open ? '✕' : '☰';
+    });
+  }
+  const slides = [...document.querySelectorAll('.rb-slide')];
+  const dots = [...document.querySelectorAll('.rb-dot')];
+  let current = 0;
+  function show(i){
+    if(!slides.length) return;
+    current = (i + slides.length) % slides.length;
+    slides.forEach((s,idx)=>s.classList.toggle('active', idx===current));
+    dots.forEach((d,idx)=>d.classList.toggle('active', idx===current));
+  }
+  dots.forEach((d,i)=>d.addEventListener('click',()=>show(i)));
+  if(slides.length>1) setInterval(()=>show(current+1), 5000);
+})();
+</script>
+</body>
+</html>

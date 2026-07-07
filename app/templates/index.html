@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% block title %}Rajabet188 | Premium Game Lobby{% endblock %}
+{% block content %}
+<section class="rb-hero" id="home">
+  <div class="rb-hero-left">
+    <span class="rb-pill">🔥 Welcome Bonus • Fast Service • Mobile Ready</span>
+    <h1>Rajabet188<br><span>Premium Game Lobby</span></h1>
+    <p>Tampilan baru bergaya dark-gold, ringan di HP, rapi di desktop, dan siap dikelola dari admin panel.</p>
+    <div class="rb-hero-actions">
+      <a class="rb-btn rb-btn-gold rb-btn-lg" href="#games">Mulai Main</a>
+      <a class="rb-btn rb-btn-ghost rb-btn-lg" href="#promo">Lihat Promo</a>
+    </div>
+    <div class="rb-stats">
+      <div><b>24/7</b><span>Support</span></div>
+      <div><b>99%</b><span>Uptime</span></div>
+      <div><b>VIP</b><span>Member Area</span></div>
+    </div>
+  </div>
+  <div class="rb-hero-slider">
+    {% for banner in banners %}
+      <article class="rb-slide {% if loop.first %}active{% endif %}" {% if banner.image %}style="--banner:url('{{ url_for('static', filename='img/products/' + banner.image) }}')"{% endif %}>
+        <span>{{ banner.tag or 'RAJABET188' }}</span>
+        <h2>{{ banner.title }}</h2>
+        <p>{{ banner.subtitle or 'Promo eksklusif untuk member Rajabet188.' }}</p>
+        <a href="{{ banner.link or '#games' }}">{{ banner.button_text or 'Ambil Promo' }} →</a>
+      </article>
+    {% else %}
+      <article class="rb-slide active">
+        <span>GRAND OPENING</span>
+        <h2>Bonus New Member</h2>
+        <p>Desain premium, kategori lengkap, dan lobby game siap dikembangkan.</p>
+        <a href="#games">Jelajahi Game →</a>
+      </article>
+      <article class="rb-slide">
+        <span>FAST ACCESS</span>
+        <h2>Mobile App Style</h2>
+        <p>Navigasi bawah, card game 2 kolom, dan tampilan ringan untuk HP.</p>
+        <a href="#provider">Lihat Provider →</a>
+      </article>
+    {% endfor %}
+    <div class="rb-dots">
+      {% set slide_count = banners|length if banners else 2 %}
+      {% for _ in range(slide_count) %}<button class="rb-dot {% if loop.first %}active{% endif %}" type="button"></button>{% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="rb-marquee" aria-label="Info berjalan">
+  <b>📢 INFO</b>
+  <div><span>Selamat datang di Rajabet188 • Promo harian tersedia • Admin bisa mengatur banner, produk, kategori, payment, user, live chat, SEO, dan laporan.</span></div>
+</section>
+
+<section class="rb-provider" id="provider">
+  <div class="rb-section-head">
+    <span>Provider</span>
+    <h2>Kategori Game Premium</h2>
+    <p>Layout dibuat orisinal dengan nuansa dark luxury seperti platform game modern.</p>
+  </div>
+  <div class="rb-provider-grid">
+    {% set providers = [
+      ('🎰','Slot','Ratusan pilihan slot populer'),
+      ('🃏','Live Casino','Lobby casino live premium'),
+      ('⚽','Sportsbook','Sports & virtual sports'),
+      ('🎯','Arcade','Crash, arcade, instant games'),
+      ('🐟','Fishing','Game tembak ikan'),
+      ('🎲','Togel','Pasaran & result area'),
+      ('💎','VIP','Level member & reward'),
+      ('🎁','Promo','Bonus harian dan event')
+    ] %}
+    {% for icon,title,desc in providers %}
+    <a class="rb-provider-card" href="#games"><i>{{ icon }}</i><b>{{ title }}</b><small>{{ desc }}</small></a>
+    {% endfor %}
+  </div>
+</section>
+
+{% if website_banners %}
+<section class="rb-wide-promos">
+  {% for wb in website_banners %}
+  <a class="rb-wide-promo" href="{{ wb.link or '#games' }}" {% if wb.image %}style="--banner:url('{{ url_for('static', filename='img/products/' + wb.image) }}')"{% endif %}>
+    <span>{{ wb.badge or 'PROMO' }}</span>
+    <h3>{{ wb.title }}</h3>
+    <p>{{ wb.subtitle }}</p>
+    <b>{{ wb.button_text or 'Lihat Detail' }} →</b>
+  </a>
+  {% endfor %}
+</section>
+{% endif %}
+
+<section class="rb-games" id="games">
+  <div class="rb-section-head rb-section-flex">
+    <div>
+      <span>Games</span>
+      <h2>Daftar Game & Produk</h2>
+      <p>Semua data tetap memakai database project lama, hanya tampilannya dibuat baru.</p>
+    </div>
+    <form class="rb-search" method="GET" action="{{ url_for('home.index') }}#games">
+      <input type="search" name="q" value="{{ q }}" placeholder="Cari game / produk...">
+      <select name="section_id">
+        <option value="">Semua Kategori</option>
+        {% for section in catalog_sections %}<option value="{{ section.id }}" {% if selected_section|string == section.id|string %}selected{% endif %}>{{ section.title }}</option>{% endfor %}
+      </select>
+      <button type="submit">Cari</button>
+    </form>
+  </div>
+
+  <div class="rb-game-grid">
+    {% for game in games %}
+    <a class="rb-game-card" href="{{ url_for('home.topup', category_id=game.id) }}">
+      <span class="rb-game-badge">{{ game.badge or 'HOT' }}</span>
+      <div class="rb-game-img">
+        {% if game.icon %}
+          {% if game.icon.startswith('http') %}<img src="{{ game.icon }}" alt="{{ game.name }}">{% else %}<img src="{{ url_for('static', filename='img/games/' + game.icon) }}" alt="{{ game.name }}">{% endif %}
+        {% else %}<strong>{{ game.name[:2] }}</strong>{% endif %}
+      </div>
+      <div class="rb-game-info">
+        <h3>{{ game.name }}</h3>
+        {% set active_products = game.products|selectattr('status', 'equalto', 'active')|list %}
+        {% if active_products %}<p>Mulai Rp {{ "{:,}".format((active_products|min(attribute='price')).price).replace(',', '.') }}</p>{% else %}<p>Segera hadir</p>{% endif %}
+      </div>
+    </a>
+    {% else %}
+    <div class="rb-empty">Game tidak ditemukan.</div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="rb-promo" id="promo">
+  <div class="rb-section-head">
+    <span>Promosi</span>
+    <h2>Bonus & Event Rajabet188</h2>
+  </div>
+  <div class="rb-promo-grid">
+    {% for promo in promos %}
+    <a class="rb-promo-card" href="{{ promo.link or '#games' }}">
+      <span>{{ promo.badge or 'BONUS' }}</span>
+      <h3>{{ promo.title }}</h3>
+      <p>{{ promo.description }}</p>
+    </a>
+    {% else %}
+    <div class="rb-promo-card"><span>WELCOME</span><h3>Bonus New Member</h3><p>Tambahkan promo dari admin panel agar muncul di halaman ini.</p></div>
+    <div class="rb-promo-card"><span>VIP</span><h3>Reward Member Aktif</h3><p>Siapkan program VIP, cashback, dan event mingguan.</p></div>
+    <div class="rb-promo-card"><span>EVENT</span><h3>Turnamen Harian</h3><p>Area promo sudah siap untuk konten event Rajabet188.</p></div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="rb-admin-preview">
+  <div>
+    <span class="rb-pill">Admin Panel V2</span>
+    <h2>Kontrol Website dari Dashboard</h2>
+    <p>Admin dapat mengelola banner, promo, game/produk, kategori, member, pesanan, metode pembayaran, live chat, SEO, role admin, audit log, dan pengaturan website.</p>
+  </div>
+  <a class="rb-btn rb-btn-gold" href="{{ url_for('admin.login') }}">Masuk Admin</a>
+</section>
+
+<section class="rb-faq" id="faq">
+  <div class="rb-section-head"><span>FAQ</span><h2>Pertanyaan Umum</h2></div>
+  <div class="rb-faq-list">
+    {% for faq in faqs %}
+    <details><summary>{{ faq.question }}</summary><p>{{ faq.answer }}</p></details>
+    {% else %}
+    <details open><summary>Apakah tampilan ini sudah responsif?</summary><p>Ya, layout dibuat mobile-first dan tetap rapi di desktop.</p></details>
+    <details><summary>Apakah admin lama tetap bisa dipakai?</summary><p>Ya, fitur backend lama dipertahankan dan tampilan admin dibuat lebih modern.</p></details>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
